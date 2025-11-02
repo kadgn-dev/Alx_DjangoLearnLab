@@ -1,5 +1,6 @@
 
----
+#### **delete.md**
+```markdown
 # Delete Operation
 
 ```python

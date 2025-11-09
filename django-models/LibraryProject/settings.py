@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'relationship_app',  # ✅ fixed: app name only, not LibraryProject.relationship_app
+    'LibraryProject.relationship_app',
 ]
 
 # --------------------------------------------------

@@ -1,0 +1,13 @@
+<h2>Edit Book</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Title:</label>
+  <input type="text" name="title" value="{{ book.title }}" required><br>
+  <label>Author:</label>
+  <select name="author">
+    {% for author in authors %}
+      <option value="{{ author.id }}" {% if author == book.author %}selected{% endif %}>{{ author.name }}</option>
+    {% endfor %}
+  </select><br>
+  <button type="submit">Save Changes</button>
+</form>

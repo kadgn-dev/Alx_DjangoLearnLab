@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LibraryProject.relationship_app',  # ✅ updated path
+    'relationship_app',  # ✅ fixed: app name only, not LibraryProject.relationship_app
 ]
 
 # --------------------------------------------------
@@ -56,7 +56,7 @@ WSGI_APPLICATION = "LibraryProject.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],  # Optional: create later
+        "DIRS": [BASE_DIR / "templates"],  # Optional global templates folder
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -101,7 +101,14 @@ USE_TZ = True
 # STATIC FILES
 # --------------------------------------------------
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]  # Optional: create this folder
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# --------------------------------------------------
+# AUTHENTICATION REDIRECTS (✅ added)
+# --------------------------------------------------
+LOGIN_REDIRECT_URL = '/books/'     # after login, go here
+LOGOUT_REDIRECT_URL = '/login/'    # after logout, go here
+LOGIN_URL = '/login/'              # when @login_required triggers redirect
 
 # --------------------------------------------------
 # DEFAULT PRIMARY KEY FIELD TYPE

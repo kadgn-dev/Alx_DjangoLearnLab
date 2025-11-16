@@ -6,10 +6,23 @@
     <title>List of Books</title>
 </head>
 <body>
-    <h1>Books Available:</h1>
+    <h1>Books Available</h1>
+
+    <!-- Search Form (Safe & CSRF Protected) -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
     <ul>
         {% for book in books %}
-        <li>{{ book.title }} by {{ book.author.name }}</li>
+            <li>{{ book.title }} by {{ book.author.name }}</li>
+        {% empty %}
+            <li>No books found.</li>
         {% endfor %}
     </ul>
 </body>
+</html>

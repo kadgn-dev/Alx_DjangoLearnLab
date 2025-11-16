@@ -4,13 +4,13 @@ from .models import Book
 
 
 # ============================================
-# View Books (Requires can_view)
+# View Books (Required by ALX: function name MUST be book_list)
 # ============================================
 @login_required
 @permission_required('bookshelf.can_view', raise_exception=True)
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()
-    return render(request, 'bookshelf/list_books.html', {'books': books})
+    return render(request, 'bookshelf/book_list.html', {'books': books})
 
 
 # ============================================
@@ -30,7 +30,7 @@ def add_book(request):
                 author=author,
                 publication_year=year
             )
-            return redirect('list_books')
+            return redirect('book_list')
 
     return render(request, 'bookshelf/add_book.html')
 
@@ -49,7 +49,7 @@ def edit_book(request, book_id):
         book.author = request.POST.get("author")
         book.publication_year = request.POST.get("year")
         book.save()
-        return redirect('list_books')
+        return redirect('book_list')
 
     return render(request, 'bookshelf/edit_book.html', {'book': book})
 
@@ -65,6 +65,6 @@ def delete_book(request, book_id):
 
     if request.method == "POST":
         book.delete()
-        return redirect('list_books')
+        return redirect('book_list')
 
     return render(request, 'bookshelf/delete_book.html', {'book': book})

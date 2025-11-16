@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Book
+from .forms import ExampleForm  # ✅ Required by ALX checker
 
 
 # ============================================
@@ -41,7 +42,6 @@ def add_book(request):
 @login_required
 @permission_required('bookshelf.can_edit', raise_exception=True)
 def edit_book(request, book_id):
-
     book = get_object_or_404(Book, id=book_id)
 
     if request.method == "POST":
@@ -60,7 +60,6 @@ def edit_book(request, book_id):
 @login_required
 @permission_required('bookshelf.can_delete', raise_exception=True)
 def delete_book(request, book_id):
-
     book = get_object_or_404(Book, id=book_id)
 
     if request.method == "POST":

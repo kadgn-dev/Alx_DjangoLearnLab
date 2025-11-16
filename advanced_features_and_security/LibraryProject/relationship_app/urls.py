@@ -24,7 +24,11 @@ urlpatterns = [
     path('member_view/', views.member_view, name='member_view'),
 
     # --------------------------------------------------
-    # ✅ Permission-Protected Book Management Views
+    # Permission-Protected Book Management Views
+    # ALX-required permissions:
+    # can_create → add_book
+    # can_edit   → edit_book
+    # can_delete → delete_book
     # --------------------------------------------------
     path('add_book/', views.add_book, name='add_book'),
     path('edit_book/<int:book_id>/', views.edit_book, name='edit_book'),

@@ -21,12 +21,19 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author.name}"
 
-    # Custom permissions
+    # Custom permissions (your original ones + required ALX task ones)
     class Meta:
         permissions = [
+            # Your existing permissions
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book"),
+
+            # Required permissions (MANDATORY for the assignment)
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
         ]
 
 

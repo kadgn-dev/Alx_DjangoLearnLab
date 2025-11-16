@@ -2,15 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.detail import DetailView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from .models import Library, Book, UserProfile, Author
 
 
 # --------------------------------------------------
-# Book List View (Requires Login)
+# Book List View (Requires can_view)
 # --------------------------------------------------
 @login_required
+@permission_required('relationship_app.can_view', raise_exception=True)
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -33,7 +33,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # auto-login after registration
+            login(request, user)
             return redirect('list_books')
     else:
         form = UserCreationForm()
@@ -41,7 +41,7 @@ def register(request):
 
 
 # --------------------------------------------------
-# ✅ Role-Based Access Control Views
+# Role-Based Access Control
 # --------------------------------------------------
 def is_admin(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
@@ -69,43 +69,51 @@ def member_view(request):
 
 
 # --------------------------------------------------
-# ✅ Permission-Protected Book Management Views
+# Permission-Protected Book Management Views
 # --------------------------------------------------
 
-@permission_required('relationship_app.can_add_book', raise_exception=True)
+# Create a book: requires can_create
+@permission_required('relationship_app.can_create', raise_exception=True)
 def add_book(request):
-    """Allow only users with 'can_add_book' permission to add books."""
     if request.method == 'POST':
         title = request.POST.get('title')
         author_id = request.POST.get('author')
+
         if title and author_id:
             author = get_object_or_404(Author, id=author_id)
             Book.objects.create(title=title, author=author)
             return redirect('list_books')
+
     authors = Author.objects.all()
     return render(request, 'relationship_app/add_book.html', {'authors': authors})
 
 
-@permission_required('relationship_app.can_change_book', raise_exception=True)
+# Edit a book: requires can_edit
+@permission_required('relationship_app.can_edit', raise_exception=True)
 def edit_book(request, book_id):
-    """Allow only users with 'can_change_book' permission to edit books."""
     book = get_object_or_404(Book, id=book_id)
+
     if request.method == 'POST':
         book.title = request.POST.get('title')
         author_id = request.POST.get('author')
+
         if author_id:
             book.author = get_object_or_404(Author, id=author_id)
+
         book.save()
         return redirect('list_books')
+
     authors = Author.objects.all()
     return render(request, 'relationship_app/edit_book.html', {'book': book, 'authors': authors})
 
 
-@permission_required('relationship_app.can_delete_book', raise_exception=True)
+# Delete a book: requires can_delete
+@permission_required('relationship_app.can_delete', raise_exception=True)
 def delete_book(request, book_id):
-    """Allow only users with 'can_delete_book' permission to delete books."""
     book = get_object_or_404(Book, id=book_id)
+
     if request.method == 'POST':
         book.delete()
         return redirect('list_books')
+
     return render(request, 'relationship_app/delete_book.html', {'book': book})

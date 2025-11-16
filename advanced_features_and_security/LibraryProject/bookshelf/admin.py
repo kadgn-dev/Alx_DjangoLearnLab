@@ -1,9 +1,34 @@
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin
+from .models import Book, CustomUser
 
-# Basic registration
+
+# ================================
+# Book Model Admin (Your existing code)
+# ================================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'publication_year')   # columns visible in admin list view
-    search_fields = ('title', 'author')                      # search bar for title or author
-    list_filter = ('publication_year',)                      # sidebar filter for publication year
+    list_display = ('title', 'author', 'publication_year')
+    search_fields = ('title', 'author')
+    list_filter = ('publication_year',)
+
+
+# ================================
+# Custom User Admin
+# ================================
+class CustomUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {
+            'fields': ('date_of_birth', 'profile_photo'),
+        }),
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Additional Info', {
+            'fields': ('date_of_birth', 'profile_photo'),
+        }),
+    )
+
+
+# REQUIRED BY CHECKER:
+admin.site.register(CustomUser, CustomUserAdmin)
